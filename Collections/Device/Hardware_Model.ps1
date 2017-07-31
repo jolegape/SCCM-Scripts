@@ -17,8 +17,11 @@
 
 # Load Configuration Manager module if it is not already
 if (!(Get-Module "ConfigurationManager")) {
-    Write-Host "Importing ConfigMgr module..."
-    Import-Module "C:\Program Files (x86)\Microsoft Configuration Manager\AdminConsole\bin\ConfigurationManager.psd1"
+    if ([Environment]::Is64BitOperatingSystem) {
+        Import-Module "C:\Program Files (x86)\Microsoft Configuration Manager\AdminConsole\bin\ConfigurationManager.psd1"
+        } else {
+        Import-Module "C:\Program Files\Microsoft Configuration Manager\AdminConsole\bin\ConfigurationManager.psd1"
+        }
 }
 
 # Get Site Code
