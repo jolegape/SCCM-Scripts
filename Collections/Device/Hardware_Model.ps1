@@ -67,7 +67,7 @@ if (!(Test-Path $ModelFolder)) {
     md $ModelFolder
 }
 
-# Create hardware collection for each model in the list
+# Create collection for each model in the list
 foreach ($Model in $ModelList.GetEnumerator() | Sort-Object Name) {
     if (!(Get-CMDeviceCollection -Name "SMC - $($Model.Key)")) {
         New-CMDeviceCollection -Name "SMC - $($Model.Key)" -LimitingCollectionName "SMC All Systems" -RefreshType Periodic -RefreshSchedule $RefreshSchedule | Move-CMObject -FolderPath $ModelFolder
