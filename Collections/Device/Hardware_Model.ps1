@@ -19,9 +19,9 @@
 if (!(Get-Module "ConfigurationManager")) {
     if ([Environment]::Is64BitOperatingSystem) {
         Import-Module "C:\Program Files (x86)\Microsoft Configuration Manager\AdminConsole\bin\ConfigurationManager.psd1"
-        } else {
+    } else {
         Import-Module "C:\Program Files\Microsoft Configuration Manager\AdminConsole\bin\ConfigurationManager.psd1"
-        }
+    }
 }
 
 # Get Site Code
