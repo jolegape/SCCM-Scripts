@@ -50,10 +50,10 @@ $ModelList = @{
     "Dell PowerEdge R420"                   =   "PowerEdge R420";
     "Dell PowerEdge R710"                   =   "PowerEdge R710";
     "Dell PowerEdge R720"                   =   "PowerEdge R720";
-    "HP 210 G1"                             =   "210";
+    "HP 210 G1"                             =   "HP 210";
     "HP Compaq Elite 8300 SFF"              =   "Elite 8300 SFF";
     "HP EliteBook 820 G1"                   =   "820 G1";
-    "HP EliteDesk 800 G1 SFF"               =   "800 G1 SFF";
+    "HP EliteDesk 800 G1 SFF"               =   "800G1 SFF";
     "HP ProBook 6470b"                      =   "6470b";
     "HP ProBook 650 G1"                     =   "650 G1";
     "HP ProBook 6550b"                      =   "6550b"
@@ -69,8 +69,8 @@ if (!(Test-Path $ModelFolder)) {
 
 # Create hardware collection for each model in the list
 foreach ($Model in $ModelList.GetEnumerator() | Sort-Object Name) {
-    if (!(Get-CMDeviceCollection -Name "SMC $($Model.Key)")) {
-        New-CMDeviceCollection -Name "SMC $($Model.Key)" -LimitingCollectionName "SMC All Systems" -RefreshType Periodic -RefreshSchedule $RefreshSchedule | Move-CMObject -FolderPath $ModelFolder
+    if (!(Get-CMDeviceCollection -Name "SMC - $($Model.Key)")) {
+        New-CMDeviceCollection -Name "SMC - $($Model.Key)" -LimitingCollectionName "SMC All Systems" -RefreshType Periodic -RefreshSchedule $RefreshSchedule | Move-CMObject -FolderPath $ModelFolder
         Add-CMDeviceCollectionQueryMembershipRule -CollectionName "SMC $($Model.Key)" -QueryExpression "select * from SMS_R_System inner join SMS_G_System_COMPUTER_SYSTEM on SMS_G_System_COMPUTER_SYSTEM.ResourceID = SMS_R_System.ResourceID where SMS_G_System_COMPUTER_SYSTEM.Model like ""%$($Model.Value)%""" -RuleName "SMC Hardware Model - $($Model.Key)"
     }
 }
