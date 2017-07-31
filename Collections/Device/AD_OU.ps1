@@ -35,7 +35,7 @@ $RefreshSchedule = New-CMSchedule -Start $ScheduleDate -RecurInterval Days -Recu
 $OUFolder = "${SiteCode}:\DeviceCollection\SMC\SMC Computer OU"
 
 # OU to search
-$OUList = Get-ADOrganizationalUnit -Filter * -SearchBase "OU=Windows Computers,OU=SMC,OU=Resources,DC=cairns,DC=catholic,DC=edu,DC=au" -Properties CanonicalName | Sort-Object CanonicalName
+$OUList = Get-ADOrganizationalUnit -Filter * -SearchBase "OU=Windows Computers,OU=SMC,OU=Resources,DC=example,DC=school,DC=edu,DC=au" -Properties CanonicalName | Sort-Object CanonicalName
 
 # Check if folder location for OU collection exists, and create if needed.
 if (!(Test-Path $OUFolder)) {
@@ -43,11 +43,11 @@ if (!(Test-Path $OUFolder)) {
 }
 
 # Create collection for each OU in the list
-# .Substring(33) removes the first 33 characters from the CanonicalName of an OU.
-# eg: cairns.catholic.edu.au/Resources/SMC/Windows Computers/Testing
+# .Substring(32) removes the first 32 characters from the CanonicalName of an OU.
+# eg: example.school.edu.au/Resources/SMC/Windows Computers/Testing
 # would become SMC/Windows Computers/Testing
 # Change or remove the substring parameter as required.
-foreach ($OU in $OUList.CanonicalName.Substring(33)) {
+foreach ($OU in $OUList.CanonicalName.Substring(32)) {
     if (!(Get-CMDeviceCollection -Name "$($OU)")) {
         New-CMDeviceCollection -Name "$($OU)" -LimitingCollectionName "All Systems" -RefreshType Periodic -RefreshSchedule $RefreshSchedule | Move-CMObject -FolderPath $OUFolder
         Add-CMDeviceCollectionQueryMembershipRule -CollectionName "$($OU)" -QueryExpression "select * from SMS_R_System where SMS_R_System.SystemOUName like ""%$($OU)%""" -RuleName "OU Members - $($OU)"
