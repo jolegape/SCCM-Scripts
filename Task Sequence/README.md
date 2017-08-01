@@ -13,5 +13,7 @@ As with any code on the internet, don't blindly copy and paste / run what you do
 
 The following scripts are provided:
 1. Set computer description in Active Directory and locally ([Set_ComputerDescription.vbs](https://github.com/jolegape/SCCM-Scripts/blob/master/Task%20Sequence/Set_ComputerDescription.vbs "Set_ComputerDescription.vbs"))
-2. Set start menu layout  ([Set_StartLayout.ps1](https://github.com/jolegape/SCCM-Scripts/blob/master/Task%20Sequence/Set_StartLayout.ps1 "Set_StartLayout.ps1"))
-3. Windows 10 modifications  ([Windows10_Modifications.ps1](https://github.com/jolegape/SCCM-Scripts/blob/master/Task%20Sequence/Windows10_Modifications.ps1 "Windows10_Modifications.ps1"))
+2. Set computer description in Active Directory only ([Set_ComputerDescription_AD.vbs](https://github.com/jolegape/SCCM-Scripts/blob/master/Task%20Sequence/Set_ComputerDescription_AD.vbs "Set_ComputerDescription_AD.vbs"))
+3. Set computer description locally only ([Set_ComputerDescription_Local.vbs](https://github.com/jolegape/SCCM-Scripts/blob/master/Task%20Sequence/Set_ComputerDescription_Local.vbs "Set_ComputerDescription_Local.vbs"))
+4. Set start menu layout  ([Set_StartLayout.ps1](https://github.com/jolegape/SCCM-Scripts/blob/master/Task%20Sequence/Set_StartLayout.ps1 "Set_StartLayout.ps1"))
+5. Windows 10 modifications  ([Windows10_Modifications.ps1](https://github.com/jolegape/SCCM-Scripts/blob/master/Task%20Sequence/Windows10_Modifications.ps1 "Windows10_Modifications.ps1"))
