@@ -4,8 +4,8 @@
 ' 
 ' 
 ' 
-' File:			Set_ADComputerDescription.vbs
-' Usage:		cscript Set_ADComputerDescription.vbs
+' File:			Set_ComputerDescription.vbs
+' Usage:		cscript Set_ComputerDescription.vbs
 ' Author:		Gavin Willett
 ' Last Updated:	01/08/2017
 ' 
