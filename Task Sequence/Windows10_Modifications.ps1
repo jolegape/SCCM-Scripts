@@ -92,13 +92,15 @@ catch {
 # Copy Required Files
 try {
     Write-Output -InputObject "Copying CMTrace.exe to Windows Dir"
-    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Tools\CMTrace.exe" -destination C:\Windows
+    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Tools\CMTrace.exe" -destination $($env:SystemRoot)
     Write-Output -InputObject "Copying ProcMon.exe to Windows Dir"
-    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Sys Internals\Procmon.exe" -destination C:\Windows
+    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Sys Internals\Procmon.exe" -destination $($env:SystemRoot)
     Write-Output -InputObject "Copying ProcExp.exe to Windows Dir"
-    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Sys Internals\ProcExp.exe" -destination C:\Windows
+    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Sys Internals\ProcExp.exe" -destination $($env:SystemRoot)
     Write-Output -InputObject "Copying BgInfo.exe to Windows Dir"
-    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Tools\Bginfo.exe" -destination C:\Windows
+    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Tools\Bginfo.exe" -destination $($env:SystemRoot)
+    Write-Output -InputObject "Copying SMC Launcher shortcut to default start menu"
+    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\Launcher.url" -destination "$($env:ProgramData)\Microsoft\Windows\Start Menu\Programs"
 }
 catch {
     Break
