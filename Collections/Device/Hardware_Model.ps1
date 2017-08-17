@@ -27,6 +27,9 @@ if (!(Get-Module "ConfigurationManager")) {
 # Get Site Code
 $SiteCode = (Get-PSDrive | where {$_.Provider.Name -eq "CMSite"}).Name
 
+#Change to Configuration Manager drive
+Set-Location -Path "$($SiteCode):"
+
 # Set Refresh Schedule Parameters
 $ScheduleDate = Get-Date -Format "dd/MM/yy HH:MM tt"
 $RefreshSchedule = New-CMSchedule -Start $ScheduleDate -RecurInterval Days -RecurCount 1
@@ -75,6 +78,6 @@ if (!(Test-Path $ModelFolder)) {
 foreach ($Model in $ModelList.GetEnumerator() | Sort-Object Name) {
     if (!(Get-CMDeviceCollection -Name "SMC - $($Model.Key)")) {
         New-CMDeviceCollection -Name "SMC - $($Model.Key)" -LimitingCollectionName "SMC All Systems" -RefreshType Periodic -RefreshSchedule $RefreshSchedule | Move-CMObject -FolderPath $ModelFolder
-        Add-CMDeviceCollectionQueryMembershipRule -CollectionName "SMC $($Model.Key)" -QueryExpression "select * from SMS_R_System inner join SMS_G_System_COMPUTER_SYSTEM on SMS_G_System_COMPUTER_SYSTEM.ResourceID = SMS_R_System.ResourceID where SMS_G_System_COMPUTER_SYSTEM.Model like ""%$($Model.Value)%""" -RuleName "SMC Hardware Model - $($Model.Key)"
+        Add-CMDeviceCollectionQueryMembershipRule -CollectionName "SMC - $($Model.Key)" -QueryExpression "select * from SMS_R_System inner join SMS_G_System_COMPUTER_SYSTEM on SMS_G_System_COMPUTER_SYSTEM.ResourceID = SMS_R_System.ResourceID where SMS_G_System_COMPUTER_SYSTEM.Model like ""%$($Model.Value)%""" -RuleName "SMC Hardware Model - $($Model.Key)"
     }
 }
