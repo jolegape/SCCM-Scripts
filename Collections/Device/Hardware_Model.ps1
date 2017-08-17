@@ -40,6 +40,7 @@ $ModelList = @{
     "Apple iMac (iMac12,2)"                 =   "imac12,2";
     "Apple iMac (iMac13,2)"                 =   "iMac13,2";
     "Apple iMac (iMac14,2)"                 =   "iMac14,2";
+    "Apple iMac (iMac17,1)"                 =   "iMac17,1";
     "Apple MacBook Pro (MacBookPro8,2)"     =   "MacBookPro8,2";
     "Apple Macbook Pro (MacBookPro13,1)"    =   "MacBookPro13,1";
     "Dell Latitude E5440"                   =   "Latitude E5440";
