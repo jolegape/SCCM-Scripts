@@ -27,6 +27,9 @@ if (!(Get-Module "ConfigurationManager")) {
 # Get Site Code
 $SiteCode = (Get-PSDrive | where {$_.Provider.Name -eq "CMSite"}).Name
 
+#Change to Configuration Manager drive
+Set-Location -Path "$($SiteCode):"
+
 # Set Refresh Schedule Parameters
 $ScheduleDate = Get-Date -Format "dd/MM/yy HH:MM tt"
 $RefreshSchedule = New-CMSchedule -Start $ScheduleDate -RecurInterval Days -RecurCount 1
