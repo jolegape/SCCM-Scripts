@@ -12,6 +12,18 @@
     https://github.com/jolegape/SCCM-Scripts
 #>
 
+# Try connect to SMS Log Path, fallback to TEMP folder if unable to connect
+try {
+    $tsenv = New-Object -ComObject Microsoft.SMS.TSEnvironment
+    $logPath = $tsenv.Value("_SMSTSLogPath")
+}
+catch {
+    $logPath = $env:TEMP
+}
+
+# Start Logging
+Start-Transcript "$($logPath)\$($myInvocation.MyCommand).log"
+
 # Built in Windows 10 apps to be removed
 $apps_list = @(
     "Microsoft.3DBuilder"
@@ -56,6 +68,24 @@ foreach ($app in $apps_list) {
     }
     catch [System.Exception]{
         Write-Warning -Message $_.Exception.Message
+    }
+}
+
+# Remove Windows Capabilities
+$capabilities_list = @(
+    "App.Support.QuickAssist~~~~0.0.1.0"
+    "App.Support.ContactSupport~~~~0.0.1.0"
+)
+
+foreach ($capability in $capabilities_list) {
+
+    # Attempt to remove Windows Capability
+    try {
+        Write-Output -InputObject "Removing Windows Capability: $($capability)"
+        Remove-WindowsCapability -Online -Name $capability
+    } 
+    catch {
+        break
     }
 }
 
@@ -105,3 +135,28 @@ try {
 catch {
     Break
 }
+
+# Copy and Set Default File Associations
+try {
+    Write-Output -InputObject "Copying SMC_Win10_1703_File_Associations.xml to System32 Dir"
+    Copy-Item "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\SMC_Win10_1703_File_Associations.xml" -destination "$($env:SystemRoot)\System32"
+    Write-Output -InputObject "Importing Default File Associations"
+    dism /online /Import-DefaultAppAssociations:"$($env:SystemRoot)\System32\SMC_Win10_1703_File_Associations.xml"
+}
+catch {
+    Break
+}
+
+# Copy and Set Default Start Menu and Taskbar Layout
+try {
+    Write-Output -InputObject "Copying StartMenuLayout.xml to System32 Dir"
+    Copy-Item "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\StartMenuLayout.xml" -destination "$($env:SystemRoot)\System32"
+    Write-Output -InputObject "Importing startmenu Layout"
+    Import-StartLayout -LayoutPath "$($env:SystemRoot)\System32\StartMenuLayout.xml" -MountPath "$($env:SystemDrive)\"
+}
+catch {
+    Break
+}
+
+# Stop Logging
+Stop-Transcript
