@@ -6,7 +6,7 @@
     Author:         Gavin Willett
     Prerequisite:   This script runs during an OSD Task Sequence after it has booted into the OS.
                     It will not work if run during the WinPE phase.
-    Last Updated:   01/08/2017
+    Last Updated:   18/10/2017
 .LINK
     Scripts hosted at:
     https://github.com/jolegape/SCCM-Scripts
@@ -28,20 +28,22 @@ Start-Transcript "$($logPath)\$($myInvocation.MyCommand).log"
 $apps_list = @(
     "Microsoft.3DBuilder"
     "Microsoft.BingWeather"
+    "Microsoft.GetHelp"
     "Microsoft.Getstarted"
     "Microsoft.Messaging"
-    "Micrsoft.Microsoft3DViewer"
+    #"Microsoft.Microsoft3DViewer"
     "Microsoft.MicrosoftOfficeHub"
     "Microsoft.MicrosoftSolitaireCollection"
-    "Microsoft.MSPaint"
+    #"Microsoft.MSPaint"
     "Microsoft.Office.OneNote"
     "Microsoft.OneConnect"
     "Microsoft.People"
-    "Microsoft.Windows.Photos"
+    "Microsoft.Print3D"
     "Microsoft.SkypeApp"
     "microsoft.windowscommunicationsapps"
     "Microsoft.WindowsFeedbackHub"
     "Microsoft.WindowsMaps"
+    #"Microsoft.Windows.Photos"
     "Microsoft.XboxApp"
     "Microsoft.ZuneMusic"
     "Microsoft.ZuneVideo"
@@ -109,15 +111,18 @@ catch {
 }
 
 # Add NetFX3 package
-# Files in the 1703 folder are specific to Windows 10 Creators Update.
-# This path will need to be changed for future releases of Windows 10.
+# Searches the base_path for a folder matching the ReleaseID of Windows (1607, 1703, 1709, etc), and then for the matching processor_architecture (amd64, x86)
+# Files will need to be copied from Source ISO\Sources\sxs folder to the appropriate release ID and architecture folder.
 try {
+    $base_path = "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SoftwareInstallPackages\Microsoft .Net Framework"
+    $os_vers = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction Stop).ReleaseID
     Write-Output -InputObject "Installing NetFX3 Package"
-    Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All -LimitAccess -Source "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Microsoft .Net Framework 3\1703" -NoRestart
+    Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All -LimitAccess -Source "$($base_path)\$($os_vers)\$($env:processor_architecture)" -NoRestart
 }
 catch {
     Break
 }
+
 
 # Copy Required Files
 try {
@@ -131,15 +136,17 @@ try {
     Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Tools\Bginfo.exe" -destination $($env:SystemRoot)
     Write-Output -InputObject "Copying SMC Launcher shortcut to default start menu"
     Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\Launcher.url" -destination "$($env:ProgramData)\Microsoft\Windows\Start Menu\Programs"
+    Write-Output -InputObject "Copying SMC_Win10_File_Associations.xml to System32 Dir"
+    Copy-Item "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\SMC_Win10_File_Associations.xml" -destination "$($env:SystemRoot)\System32"
+    Write-Output -InputObject "Copying StartMenuLayout.xml to System32 Dir"
+    Copy-Item "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\StartMenuLayout.xml" -destination "$($env:SystemRoot)\System32"
 }
 catch {
     Break
 }
 
-# Copy and Set Default File Associations
+# Set Default File Associations
 try {
-    Write-Output -InputObject "Copying SMC_Win10_1703_File_Associations.xml to System32 Dir"
-    Copy-Item "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\SMC_Win10_1703_File_Associations.xml" -destination "$($env:SystemRoot)\System32"
     Write-Output -InputObject "Importing Default File Associations"
     dism /online /Import-DefaultAppAssociations:"$($env:SystemRoot)\System32\SMC_Win10_1703_File_Associations.xml"
 }
@@ -147,10 +154,8 @@ catch {
     Break
 }
 
-# Copy and Set Default Start Menu and Taskbar Layout
+# Set Default Start Menu and Taskbar Layout
 try {
-    Write-Output -InputObject "Copying StartMenuLayout.xml to System32 Dir"
-    Copy-Item "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\StartMenuLayout.xml" -destination "$($env:SystemRoot)\System32"
     Write-Output -InputObject "Importing startmenu Layout"
     Import-StartLayout -LayoutPath "$($env:SystemRoot)\System32\StartMenuLayout.xml" -MountPath "$($env:SystemDrive)\"
 }
