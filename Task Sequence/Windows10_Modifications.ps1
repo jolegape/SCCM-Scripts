@@ -6,7 +6,7 @@
     Author:         Gavin Willett
     Prerequisite:   This script runs during an OSD Task Sequence after it has booted into the OS.
                     It will not work if run during the WinPE phase.
-    Last Updated:   18/10/2017
+    Last Updated:   19/10/2017
 .LINK
     Scripts hosted at:
     https://github.com/jolegape/SCCM-Scripts
@@ -114,7 +114,7 @@ catch {
 # Searches the base_path for a folder matching the ReleaseID of Windows (1607, 1703, 1709, etc), and then for the matching processor_architecture (amd64, x86)
 # Files will need to be copied from Source ISO\Sources\sxs folder to the appropriate release ID and architecture folder.
 try {
-    $base_path = "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SoftwareInstallPackages\Microsoft .Net Framework"
+    $base_path = "\\SMCFS001.example.school.edu.au\SCCMLibrary\SoftwareInstallPackages\Microsoft .Net Framework 3"
     $os_vers = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction Stop).ReleaseID
     Write-Output -InputObject "Installing NetFX3 Package"
     Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All -LimitAccess -Source "$($base_path)\$($os_vers)\$($env:processor_architecture)" -NoRestart
@@ -137,9 +137,9 @@ try {
     Write-Output -InputObject "Copying SMC Launcher shortcut to default start menu"
     Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\Launcher.url" -destination "$($env:ProgramData)\Microsoft\Windows\Start Menu\Programs"
     Write-Output -InputObject "Copying SMC_Win10_File_Associations.xml to System32 Dir"
-    Copy-Item "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\SMC_Win10_File_Associations.xml" -destination "$($env:SystemRoot)\System32"
+    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\SMC_Win10_File_Associations.xml" -destination "$($env:SystemRoot)\System32"
     Write-Output -InputObject "Copying StartMenuLayout.xml to System32 Dir"
-    Copy-Item "\\SMCFS001.cairns.catholic.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\StartMenuLayout.xml" -destination "$($env:SystemRoot)\System32"
+    Copy-Item "\\SMCFS001.example.school.edu.au\SCCMLibrary\SCCMScripts\OSDFiles\StartMenuLayout.xml" -destination "$($env:SystemRoot)\System32"
 }
 catch {
     Break
